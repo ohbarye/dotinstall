@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script type="text/javascript" src="http://wauke.org/lib/jquery.js"></script>
+<title>Canvas</title>
+<style>
+body {
+    background: #000000;
+    margin: 32px;
+}
+.debug {
+    color: yellow;
+}
+</style>
+<script>
+$(function(){
+    // init
+    var i, j;
+    var canvas_tmp = $("<canvas>")[0];
+    if(!canvas_tmp.getContext) return;
+    var context_tmp = canvas_tmp.getContext('2d');
+    var str = "じんべえ！！";
+    var font_size = 11; //px
+    var fontStyle = font_size + "px 'ＭＳ ゴシック'";
+    var str_width, str_height;
+    var table = [];
+
+    // measure text
+    context_tmp.font = fontStyle;
+    canvas_tmp.width = str_width = context_tmp.measureText(str).width;
+    canvas_tmp.height = str_height = Math.ceil(font_size * 1.5);
+
+    // render text
+    context_tmp.font = fontStyle;
+    context_tmp.textBaseline = "top";
+    context_tmp.fillText(str, 0, 0);
+
+    // get image data
+    var imgdata = context_tmp.getImageData(0, 0, str_width, str_height);
+    console.log(imgdata,str_width,str_height);
+    var exist = false;
+    var cnt = 0;
+    for(i = 0; i < str_height; i++){
+        for(j = 0; j < str_width; j++){
+            alpha = imgdata.data[(str_width * i + j) * 4 + 3];
+            if(alpha >= 128){
+                if(!exist) exist = true;
+                if(!table[i + cnt]) table[i + cnt] = [];
+                table[i + cnt][j] = 1;
+            }
+        }
+        if(table[i + cnt]){
+            for(j = 0; j < str_width; j++){
+                if(!table[i + cnt][j]) table[i + cnt][j] = 0;
+            }
+        }
+        if(!exist) cnt--;
+    }
+
+    // render text by ascii blocks
+    var debug = $(".debug");
+    for(i = 0; i < table.length; i++){
+        for(j = 0; j < str_width; j++){
+            if(table[i][j]){
+                debug.append("■");
+            }
+            else{
+                debug.append("□")
+            }
+        }
+        debug.append("<br>")
+    }
+});
+</script>
+</head>
+<body>
+    <div class="debug"></div>
+</body>
+</html>

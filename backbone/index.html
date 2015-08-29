@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>Backbone.js</title>
+  <style>
+    .completed {
+      text-decoration: line-through;
+      color: gray;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Tasks</h1>
+
+  <form id="addTask">
+    <input type="text" id="title">
+    <input type="submit" value="add">
+    <span id="error"></span>
+  </form>
+
+
+  <div id="tasks">
+  </div>
+  <p>Tasks left: <span id="count"></span></p>
+
+  <script type="text/template" id="task-template">
+    <input type="checkbox" class="toggle" <%= completed ? 'checked' : '' %> >
+    <span class="<%= completed ? 'completed' : '' %>">
+      <%- title %>
+    </span>
+    <span class="delete">[x]</span>
+  </script>
+  <script src="js/underscore.js"></script>
+  <script src="js/jquery.js"></script>
+  <script src="js/backbone.js"></script>
+  <script type="text/coffeescript" src="js/app.js.coffee"></script>
+  <script type="text/javascript" src="js/coffee-script.js"></script>
+
+</body>
+</html>
